@@ -13,8 +13,14 @@ info "Provision-script user: `whoami`"
 info "Configure timezone"
 timedatectl set-timezone ${timezone} --no-ask-password
 
-#info "Install additional software"
-#echo "Done!"
+info "Install additional software"
+yum -y install epel-release
+echo "Done!"
+
+info "Install Mosquitto"
+yum -y install mosquitto
+systemctl enable mosquitto
+echo "Done!"
 
 info "Install MongoDB - Add to repositories"
 cat << EOF > /etc/yum.repos.d/mongodb-org.repo

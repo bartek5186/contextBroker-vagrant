@@ -7,6 +7,9 @@ function info {
 }
 
 info "Restart apps"
+sudo systemctl restart mosquitto
+echo "Mosquitto... Done!"
+
 service mongod restart
 echo "MongoDB restart... Done!"
 /etc/init.d/contextBroker start
