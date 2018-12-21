@@ -15,6 +15,9 @@ timedatectl set-timezone ${timezone} --no-ask-password
 
 info "Install additional software"
 yum -y install epel-release
+yum -y install git
+yum -y install nodejs
+yum -y install rpm-build
 echo "Done!"
 
 info "Install Mosquitto"
@@ -45,7 +48,6 @@ service mongod start
 mongo --eval 'db.getSiblingDB("orion").createUser({user: "orion", pwd: "orion_pass", roles: [{role: "readWrite", db: "orion"}]})'
 echo "Done!"
 
-
 info "Install ContextBroker - Add to repositories"
 cat << EOF > /etc/yum.repos.d/fiware-orion.repo
 [fiware-release]
@@ -68,5 +70,16 @@ sed -i "s/BROKER_USER=.*/BROKER_USER=root/" /etc/sysconfig/contextBroker
 sed -i "s/BROKER_PID_FILE=.*/BROKER_PID_FILE=\/var\/run\/contextBroker.pid/" /etc/sysconfig/contextBroker
 sed -i "s/#BROKER_DATABASE_USER=.*/BROKER_DATABASE_USER=orion/" /etc/sysconfig/contextBroker
 sed -i "s/#BROKER_DATABASE_PASSWORD=.*/BROKER_DATABASE_PASSWORD=orion_pass/" /etc/sysconfig/contextBroker
+
+echo "Done!"
+
+info "Install IoT Agent telefonicaid/iotagent-ul"
+
+git clone https://github.com/telefonicaid/iotagent-ul.git
+cd /home/vagrant/iotagent-ul
+npm install
+sh /home/vagrant/iotagent-ul/rpm/create-rpm.sh -v 1.8.0 -r e5fe952
+yum localinstall -y --nogpg /home/vagrant/iotagent-ul/rpm/RPMS/x86_64/iotagent-ul-1.8.0-e5fe952.x86_64.rpm
+service iotaul start
 
 echo "Done!"

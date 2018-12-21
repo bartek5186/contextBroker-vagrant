@@ -12,8 +12,10 @@ echo "Mosquitto... Done!"
 
 service mongod restart
 echo "MongoDB restart... Done!"
-/etc/init.d/contextBroker start
+/etc/init.d/contextBroker restart
 echo "ContextBroker... Done!"
+service iotaul restart
+echo "IoT Agent... Done!"
 
 info "Main - Hello Dev - You probably can try do something now"
 echo "Provision-script user: `whoami`"
